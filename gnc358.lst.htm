@@ -1,4 +1,3 @@
-
 <html><head><meta charset="utf-8"/>
 <style>@font-face {
   font-family: 'atari_classicchunky';
@@ -27,17 +26,19 @@ body {
 30019   DATA &#xe013;&#xe013;&#xe013;&#xe013;&#xe006;&#xe013;&#xe013;&#xe007;&#xe013;&#xe006;&#xe016;&#xe002;&#xe007;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;
 30020   DATA &#xe006;&#xe007;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe006;&#xe013;&#xe013;&#xe013;&#xe013;&#xe007;&#xe013;&#xe013;&#xe013;&#xe013;
 30021   DATA &#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;
+30030   IF PL(%2):X=7:Y=PL(%2):POSITION X,Y:? #6;"&#xe006;&#xe006;":POSITION X,Y+%1:? #6;"&#xe006;&#xe006;"
+30035     POSITION X,Y+%2:? #6;"&#xe006;&#xe006;":ENDIF 
 30100 ENDPROC 
 30110 ------------------------------
 30111 PROC INITPLANET
 30112   DATA 12,6,4,0,2,1,1,5,1,2
-30113   DATA 5,0,5,128,1,0,5,128,5,0,1,0
+30113   DATA 5,16,5,128,1,0,5,128,5,0,1,0
 30114   DATA 5,32,16,0,16,0,1,0,1,0,1,0
 30115   DATA 5,32,16,0,16,0,1,0,1,0,1,0
-30116   DATA 5,0,1,0,5,0,4,64,5,0,1,0,-1
+30116   DATA 5,16,1,0,5,0,4,64,5,0,1,0,-1
 30120   RESTORE 30112:I=PMPL:READ J
 30121   WHILE J&#x3c;&#x3e;-1:POKE I,J:I=I+%1:READ J:WEND 
-30122   PROMX=6:PROMY=RAND(%3)+%1:EKSX=PROMX:EKSY=PROMY:PL(%1)=%0
+30122   PROMX=6:PROMY=RAND(%3)+%1:EKSX=PROMX:EKSY=PROMY:PL(%1)=%0:PL(%2)=%0
 30200 ENDPROC 
 30330 ------------------------------
 30340 PROC PLTIMEON
@@ -56,34 +57,39 @@ body {
 30530 ENDPROC 
 30540 ------------------------------
 30545 PROC FIRSTIMP
+30550   PARAM1$="Mikrograwitacja i aktywno^&#xe01b;&#xe01f; geologiczna mog&#xe07b; wyrzuci&#xe01b;&#xe01f; nas w przestrze&#xe00d;.":PARAM1=-1:EXEC CHAT:? 
 30575 ENDPROC 
 30600 ------------------------------
 30605 PROC PLEVENT
 30610   F=PARAM1:H=PL(%1)
 30615   IF F&#x26;128 AND H&#x26;128=%0 AND BAD
-30620     PARAM1$="Jeste^my w ma&#xe01b;&#xe01d;ym kraterze. Zacznijmy zbiera&#xe01b;&#xe01f; pr&#xe01b;&#xe07f;bki.":PARAM1=-100:EXEC CHAT
+30620     PARAM1$="Jeste^my w ma&#xe01b;&#xe01d;ym kraterze. Zacznijmy zbiera&#xe01b;&#xe01f; pr&#xe01b;&#xe07f;bki.":PARAM1=-100:EXEC CHAT:? 
 30625     PARAM1=%1:EXEC TIMEON:PL(%1)=PL(%1)+128
-30630     PARAM1$="Dobra, dzi&#xe01b;&#xe005;kuj&#xe01b;&#xe005;.":PARAM1=12:EXEC CHAT:PAUSE FIF:PLPKT=PLPKT+%1
+30630     PARAM1$="Dobra, dzi&#xe01b;&#xe005;kuj&#xe01b;&#xe005;.":PARAM1=12:EXEC CHAT:? :PAUSE FIF:PLPKT=PLPKT+%1
 30635   ENDIF 
 30640   IF F&#x26;64 AND H&#x26;64=%0 AND BAD
-30645     PARAM1$="Macie ^redni krater w sektorze. Mo&#xe01b;&#xe01c;ecie zebra&#xe01b;&#xe01f; pr&#xe01b;&#xe07f;bki.":PARAM1=12:EXEC CHAT:PAUSE FIF
-30650     PARAM1$="Dobra, przyj&#xe07b;&#xe01b;&#xe01d;em":PARAM1=-100:EXEC CHAT
+30645     PARAM1$="Macie ^redni krater w sektorze. Mo&#xe01b;&#xe01c;ecie zebra&#xe01b;&#xe01f; pr&#xe01b;&#xe07f;bki.":PARAM1=12:EXEC CHAT:? :PAUSE FIF
+30650     PARAM1$="Dobra, przyj&#xe07b;&#xe01b;&#xe01d;em":PARAM1=-100:EXEC CHAT:? 
 30655     PARAM1=%1+RAND(%2):EXEC TIMEON:PL(%1)=PL(%1)+64
-30660     PARAM1$="Mamy ^redni krater, dobrze.":PARAM1=12:EXEC CHAT:PAUSE FIF:PLPKT=PLPKT+%3
+30660     PARAM1$="Mamy ^redni krater, dobrze.":PARAM1=12:EXEC CHAT:? :PAUSE FIF:PLPKT=PLPKT+%3
 30665   ENDIF 
 30670   IF F&#x26;32 AND H&#x26;32=%0 AND BAD:PLPKT=PLPKT+4
-30675     PARAM1$="To jest najwi&#xe005;kszy krater. Zachowajcie ostro&#xe01b;&#xe01c;no^&#xe01b;&#xe01f;.":PARAM1=12:EXEC CHAT:PAUSE FIF
+30675     PARAM1$="To jest najwi&#xe005;kszy krater. Zachowajcie ostro&#xe01b;&#xe01c;no^&#xe01b;&#xe01f;.":PARAM1=12:EXEC CHAT:? :PAUSE FIF
 30680     PARAM1=5:EXEC ISPRESENT
 30685     IF RESULT:PLPKT=PLPKT+%2
-30690       PARAM1=5:PARAM1$="Chwila, znalaz&#xe01b;&#xe01d;em dogodne zej^cie.":EXEC CHAT:PAUSE FIF
-30700       PARAM1=5:PARAM1$="Mo&#xe01b;&#xe01c;emy zej^&#xe01b;&#xe01f; g&#xe01b;&#xe01d;&#xe005;biej bez naruszania zabronionego sektora.":EXEC CHAT:PAUSE FIF
-30705       PARAM1=12:PARAM1$="W porz&#xe07b;dku, ale zachowajcie ostro&#xe01b;&#xe01c;no^&#xe01b;&#xe01f;.":EXEC CHAT:PAUSE FIF
+30690       PARAM1=5:PARAM1$="Chwila, znalaz&#xe01b;&#xe01d;em dogodne zej^cie.":EXEC CHAT:PAUSE FIF:? 
+30700       PARAM1=5:PARAM1$="Mo&#xe01b;&#xe01c;emy zej^&#xe01b;&#xe01f; g&#xe01b;&#xe01d;&#xe005;biej bez naruszania zabronionego sektora.":EXEC CHAT:PAUSE FIF:? 
+30705       PARAM1=12:PARAM1$="W porz&#xe07b;dku, ale zachowajcie ostro&#xe01b;&#xe01c;no^&#xe01b;&#xe01f;.":EXEC CHAT:PAUSE FIF:? 
 30710       PARAM1=%2:EXEC TIMEON:PARAM1=6:EXEC ISPRESENT
-30715       IF RESULT:PARAM1=6:PARAM1$="W przekroju wida&#xe01b;&#xe01f; g&#xe01b;&#xe01d;&#xe005;boko niezwyk&#xe01b;&#xe01d;&#xe07b; struktur&#xe005;.":EXEC CHAT:PAUSE FIF
-30720         PARAM1=6:PARAM1$="Badania pozwol&#xe07b; okre^li&#xe01b;&#xe01f;, sk&#xe07b;d przyby&#xe01b;&#xe01d; ten obiekt.":EXEC CHAT:ENDIF 
+30715       IF RESULT:PARAM1=6:PARAM1$="W przekroju wida&#xe01b;&#xe01f; g&#xe01b;&#xe01d;&#xe005;boko niezwyk&#xe01b;&#xe01d;&#xe07b; struktur&#xe005;.":EXEC CHAT:PAUSE FIF:? 
+30720         PARAM1=6:PARAM1$="Badania pozwol&#xe07b; okre^li&#xe01b;&#xe01f;, sk&#xe07b;d przyby&#xe01b;&#xe01d; ten obiekt.":EXEC CHAT:? :ENDIF 
 30725       PARAM1=%1+RAND(%2):EXEC TIMEON
-30730     ENDIF :PARAM1=%3+RAND(%3):EXEC TIMEON:PARAM1=12:PARAM1$="Dobra robota, ale streszczajmy si&#xe005;.":EXEC CHAT
+30730     ENDIF :PARAM1=%3+RAND(%3):EXEC TIMEON:PARAM1=12:PARAM1$="Dobra robota, ale streszczajmy si&#xe005;.":EXEC CHAT:? 
 30735     PAUSE FIF:PL(%1)=PL(%1)+32:ENDIF 
+30740   IF F&#x26;16 AND H&#x26;16=%0 AND H&#x26;32:PL(%1)=PL(%1)+16:PTR=PMPL+12:PL(%2)=4
+30745     IF EKSY&#x3c;&#x3e;%1 THEN PTR=PTR+36:PL(%2)=PL(%2)+9
+30750     PARAM1$="Uwaga! Struktura jest niestabilna i w jednym z sektor&#xe01b;&#xe07f;w pojawi&#xe01b;&#xe01d;o si&#xe005; p&#xe005;kni&#xe005;cie.":PARAM1=12
+30755     EXEC CHAT:? :POKE PTR,16:EXEC DRAWMAP:ENDIF 
 31015 ENDPROC 
 31100 ------------------------------
 31110 PROC LASTIMP
