@@ -7,7 +7,7 @@
 }
 body {
   font-family: 'atari_classicchunky';
-  white-space: pre;
+  white-space: pre-wrap;
 }
 </style></head>
 10 GRAPHICS 7:PMBASE=PEEK(106)-8:PM256=PMBASE*256:POKE 106,PMBASE-16:GRAPHICS %0:DEG 
@@ -751,6 +751,7 @@ body {
 20100   POSITION X+%1,Y+6:? #6;"..":POSITION X+%1,Y+7:? #6;"."
 20105   POSITION X+%1,Y+8:? #6;"MATKA":POSITION X+%1,Y+9:? #6;"v1.0"
 20110   COLOR ASC(":"):PLOT 10,18:DRAWTO 30,18:PLOT 10,17:DRAWTO 30,17
+20115   I=USR($067D):POSITION %2,19:? #6;"Radiogram"
 20340 ENDPROC 
 21000 ------------------------------
 21001 PROC EVENT
