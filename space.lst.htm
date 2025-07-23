@@ -7,12 +7,13 @@
 }
 body {
   font-family: 'atari_classicchunky';
-  white-space: pre;
+  white-space: pre-wrap;
 }
 </style></head>
 29000 ------------------------------
 29010 PROC STARSCREEN
 29020   GRAPHICS 12:POKE 708,%0:POKE 709,%3:POKE 710,197:POKE 711,51:POKE 712,%3:SOUND %1,240,12,%0
+29025   POKE PMPL+%3,%3:POKE PMPL+%1,197
 29030   POKE 756,PMBASE+4:EXEC HEXNET
 29040   FOR I=%1 TO PLCNT
 29050     T=ABS(PLANETS(I,%1)):RESTORE 5720+T:READ M

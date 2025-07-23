@@ -7,7 +7,7 @@
 }
 body {
   font-family: 'atari_classicchunky';
-  white-space: pre;
+  white-space: pre-wrap;
 }
 </style></head>
          opt %0100110
@@ -17,6 +17,10 @@ PIERWSZA equ 47104+696-128
 TIMCNT2  equ 538
 SETVBLV  equ $e45c
 MUSADR   equ $afc2
+PMPL     equ 47204
+DLADR    equ 41854
+DLIV     equ $0200
+NMIEN    equ $d40e
 
          org $600
 
@@ -89,6 +93,41 @@ CMCINI   pla
 
 CMCVBL   jsr $a806
          jmp $e462 *EXITVBL
+
+DLIPROC  pla
+         lda &#x3c;DLIENT
+         sta DLIV
+         lda &#x3e;DLIENT
+         sta DLIV+1
+         *lda #4+128
+         lda DLADR+24
+         ora #$80
+         sta DLADR+24
+         lda NMIEN
+         ora #$80
+         sta NMIEN
+         rts
+
+
+DLIENT   pha
+         *txa
+         *pha
+         lda #0
+         sta $d017 *709
+         lda #$0a
+         sta $d018 *710
+         *ldx #15
+*DLLP     sta $d40a *wsync
+         *dex
+         *bne DLLP
+         *lda PMPL+3
+         *sta 709
+         *lda PMPL+1
+         *sta 710
+         *pla
+         *tax
+         pla
+         rti
 
 
          org $700-24-1
