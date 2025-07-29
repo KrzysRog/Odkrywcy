@@ -10,14 +10,15 @@ body {
   white-space: pre-wrap;
 }
 </style></head>
-10 GRAPHICS 7:PMBASE=PEEK(106)-8:PM256=PMBASE*256:POKE 106,PMBASE-16:GRAPHICS %0:DEG 
-12 BLOAD "D:ODKRTEST.CMC":BLOAD "D:ODKRTEST.REP":CMCPROC=$0658
+5 GRAPHICS 7+16:PMBASE=PEEK(106)-8:PM256=PMBASE*256:POKE 106,PMBASE-16
+8 DL=PM256+283:FOR I=%0 TO 103:POKE $0600+I,PEEK(DPEEK(560)+I):NEXT I:DPOKE $0600+102,DL
+12 GRAPHICS 0:DEG :BLOAD "D:ODKRTEST.CMC":BLOAD "D:ODKRTEST.REP":CMCPROC=$0658:MOVE $0600,DL,104
 15 OPEN #1,4,%0,"D:ODKR.FNT":BGET #1,PM256+1024,1024:CLOSE #1:POKE 756,PMBASE+4
-20 PMPOCHW=PM256+200:PMWALKA=PMPOCHW+21
+20 PMPOCHW=PM256+160:PMWALKA=PMPOCHW+21
 21 PMWAGA=PMWALKA+21:PMNOSN=PMWAGA+21:PMSZYBK=PMNOSN+21:PMTEREN=PMSZYBK+21:PMPL=PM256+100
 100 DIM RESULT$(20),PARAM1$(80),TXT$(20),KEY$(%1),PL(4):FIF=50:HUN=-100
 150 FOR PTR=PM256+416 TO PM256+463:POKE PTR,128:NEXT PTR
-225 OPEN #1,4,%0,"D:CONST.OBJ":BGET #1,PM256+200,123:CLOSE #1:REM BGET #1,1536,78
+225 OPEN #1,4,%0,"D:CONST.OBJ":BGET #1,PMPOCHW,123:CLOSE #1:REM BGET #1,1536,78
 226 BLOAD "D:MACH.OBJ"
 240 POKE 705,197:POKE 704,51:POKE 53257,%3:POKE 53256,%3
 250 DATA 170,170,170,170,0,0,0,0,170,170,170,170,0,0,0,0,170,170,170,170
@@ -39,7 +40,7 @@ body {
 1255     POKE J,%2:J=J+%1
 1260     K=K+%1:READ I
 1265   WEND 
-1266   POKE PM256,K:PLPKT=%0:DIM OBJ(K):EXEC INITPLANETS:STIME=%1:GWX=%1:GWY=%1
+1266   DEL 29000,32000:POKE PM256,K:PLPKT=%0:DIM OBJ(K):EXEC INITPLANETS:STIME=%1:GWX=%1:GWY=%1
 1268   PARAM1$="D:SPACE.LST":PARAM1=%0:EXEC ENTERLST
 1270 ENDPROC 
 1300 ------------------------------
@@ -343,7 +344,7 @@ body {
 2500   IF RES&#x3c;=ZASEKS
 2505     PARAM1$="W trakcie postoju za&#xe01b;&#xe01d;oga wykorzysta&#xe01b;&#xe01d;a zasoby. Pozosta&#xe01b;&#xe01d;e jednostki: "
 2507     ZASEKS=ZASEKS-RES
-2510     PARAM1$(LEN(PARAM1$)+%1)=STR$(ZASEKS):PARAM1=%0:EXEC CHAT
+2510     PARAM1$(LEN(PARAM1$)+%1)=STR$(ZASEKS):PARAM1=%0:? :EXEC CHAT
 2520   ELSE 
 2525     RES=RES-ZASEKS:ZASEKS=%0
 2530     WHILE RES
@@ -351,7 +352,7 @@ body {
 2540       IF RES
 2545         ID=RAND(HUM)+%1:PTR=OBJ(ID)+%2
 2550         POKE PTR,PEEK(PTR)-%1
-2555         PARAM1$="Pogorszenie stanu zdrowia: ":PARAM1=%0:EXEC CHAT
+2555         PARAM1$="Pogorszenie stanu zdrowia: ":PARAM1=%0:? :EXEC CHAT
 2560         EXEC STATE
 2580         PAUSE FIF
 2585         RES=RES-%1
@@ -384,7 +385,7 @@ body {
 2760 PROC TIMEON
 2763   IF NOT RTIME THEN RTIME=(6-PEEK(PMPL+5))*6
 2765   V=PARAM1:FOR II=%1 TO V
-2770     MTIME=MTIME+%1:RTIME=RTIME-%1:EXEC PLTIME
+2770     MTIME=MTIME+%1:RTIME=RTIME-%1:EXEC PLTIME:EXEC PLTIMEON
 2775     IF NOT RTIME
 2780       EXEC RESCONT:RTIME=(6-PEEK(PMPL+5))*6
 2785     ENDIF 
@@ -406,7 +407,7 @@ body {
 2920   EKSX=X:EKSY=Y:TXT$=HEX$((EKSX+9)*$10+EKSY)
 2975   IF RAND(%2):PARAM1$="Wyruszacie do ":ELSE :PARAM1$="Teraz do ":ENDIF 
 2980   PARAM1$(LEN(PARAM1$)+%1)=TXT$
-2985   ? "&#xe09c;";:PARAM1=12:EXEC CHAT:? ".";
+2985   PARAM1=12:EXEC CHAT:? ".";
 2990   PAUSE FIF+FIF:PARAM1=-1:? :IF RAND(%2):PARAM1$="Dobra, przyj&#xe07b;&#xe01b;&#xe01d;em."
 3000   ELSE :PARAM1$="Zbieramy si&#xe005;.":ENDIF 
 3005   EXEC CHAT
@@ -442,7 +443,7 @@ body {
 3125   FOR I=%1 TO OBJCNT
 3130     PTR=OBJ(I):IF (PEEK(PTR)&#x3c;8 AND PEEK(PTR+%2)&#x3c;5) OR PEEK(PTR+%2)=%1 THEN TXT$(LEN(TXT$)+%1)=HEX$(I)
 3132   NEXT I
-3135   IF NOT LEN(TXT$) THEN PARAM1=-1:PARAM1$="Wszystko w porz&#xe07b;dku.":EXEC CHAT:GOTO 3340
+3135   IF NOT LEN(TXT$) THEN PARAM1=-1:PARAM1$="Wszystko w porz&#xe07b;dku.":? :EXEC CHAT:GOTO 3340
 3140   IF LEN(TXT$)=%2:C=%1
 3145   ELSE 
 3150     PARAM1=HUN:PARAM1$="Czym si&#xe005; zaj&#xe07b;&#xe01b;&#xe01f;?":EXEC CHAT:? :? TXT$;"=";LEN(TXT$);"=&#x3e;";
@@ -483,7 +484,8 @@ body {
 3400 ------------------------------
 3410 PROC PLREP
 3420   EXEC OFFPMG:GRAPHICS %0:POKE 710,%0:POKE 709,10:POKE 712,10:POKE 756,PMBASE+4
-3430   ? :? "Planeta:    ";:EXEC PLNAME:PARAM1$=RESULT$:EXEC PRINTSLOW
+3425   POSITION 32,%0:? "PAM:";FRE(%0)
+3430   POSITION %0,%1:? "Planeta:    ";:EXEC PLNAME:PARAM1$=RESULT$:EXEC PRINTSLOW
 3440   DATA Niemal zerowa,Niewielka,Ziemska,Du&#xe01b;&#xe01c;a,Wielka
 3450   DATA Brak,Rozrzedzona,Normalna,Truj&#xe07b;ca,Kwasowa
 3460   DATA Arktyczny,Umiarkowany,Tropikalny,Pustynny,brak
@@ -501,22 +503,22 @@ body {
 3610 PROC HUM0
 3620   EXEC BUILDOBJ:EXEC CALCHUM
 3630   IF NOT HUM:REM CZY EKS
-3640     PARAM1=%0:PARAM1$="Stracili^my kontakt z ekspedycj&#xe07b;.":EXEC CHAT:PAUSE FIF:? 
-3650     PARAM1=12:PARAM1$="Dziekuj&#xe005; matko.":EXEC CHAT:PAUSE FIF:? 
+3640     PARAM1=%0:PARAM1$="Stracili^my kontakt z ekspedycj&#xe07b;.":? :EXEC CHAT:PAUSE FIF
+3650     PARAM1=12:PARAM1$="Dziekuj&#xe005; matko.":? :EXEC CHAT:PAUSE FIF
 3660     PARAM1$="Prom, zglo^ si&#xe005;!":EXEC CHAT
 3670     LOK=%2:EXEC BUILDOBJ:LOK=%1:EXEC CALCHUM:? 
 3680     IF HUM:REM CZY PROM?
-3690       PARAM1=HUN:PARAM1$="Tu prom, potwierdzam - stracili^my ekspedycj&#xe005;!":EXEC CHAT
+3690       PARAM1=HUN:PARAM1$="Tu prom, potwierdzam - stracili^my ekspedycj&#xe005;!":? :EXEC CHAT
 3700       IF EKSX&#x3c;&#x3e;PROMX OR EKSY&#x3c;&#x3e;PROMY
 3710         ZASEKS=%0
 3720         GOSUB 3900
 3750       ENDIF 
-3760       ? :PARAM1=12:PARAM1$="Dobra, zbierajcie sprz&#xe005;t.":EXEC CHAT:? 
+3760       ? :PARAM1=12:PARAM1$="Dobra, zbierajcie sprz&#xe005;t.":EXEC CHAT
 3770       ? "&#x3e;";:REPEAT :UNTIL LEN(INKEY$)
 3780       EKSX=PROMX:EKSY=PROMY:LOK=%2:EXEC MISSPROT
 3790       EXEC PLSCREEN
 3800     ELSE :REM PROM PUSTY
-3810       PARAM1=12:PARAM1$="Matko, wdr&#xe01b;&#xe07f;&#xe01b;&#xe01c; protok&#xe01b;&#xe07f;&#xe01b;&#xe01d; awaryjnego powrotu promu":EXEC CHAT:PAUSE FIF
+3810       PARAM1=12:PARAM1$="Matko, wdr&#xe01b;&#xe07f;&#xe01b;&#xe01c; protok&#xe01b;&#xe07f;&#xe01b;&#xe01d; awaryjnego powrotu promu":? :EXEC CHAT:PAUSE FIF
 3820       PARAM1=%0:PARAM1$="Przyj&#xe005;&#xe01b;&#xe01d;am, uruchamiam automatycznego pilota.":? :EXEC CHAT:OVER=%1
 3830       GOSUB 3900
 3860     ENDIF 
@@ -601,11 +603,11 @@ body {
 5470       IF RAND(%2):PARAM1$="Dobra, zbierajcie sprz&#xe005;t i wracajcie do gwiazdolotu."
 5480       ELSE :PARAM1$="Misja zako&#xe00d;czona, mo&#xe01b;&#xe01c;ecie wraca&#xe01b;&#xe01f;."
 5490       ENDIF 
-5500       PARAM1=12:? "&#xe09c;";:EXEC CHAT:PAUSE FIF
+5500       PARAM1=12:EXEC CHAT:PAUSE FIF
 5510       IF RAND(%2):PARAM1$="Dziekuj&#xe005;, pakujemy si&#xe005;."
 5520       ELSE :PARAM1$="Tak jest, zbieramy sprz&#xe005;t"
 5530       ENDIF 
-5540       PAUSE FIF:? :PARAM1=-1:EXEC CHAT
+5540       PAUSE FIF:PARAM1=-1:EXEC CHAT
 5550       OVER=%1:PAUSE FIF+FIF:EXEC LASTIMP
 5560     ENDIF 
 5565     EXEC HUM0
@@ -613,7 +615,7 @@ body {
 5580 ENDPROC 
 5700 ------------------------------
 5701 PROC INITPLANETS
-5705   PARAM1$="D:PLANETY.LST":PARAM1=%0:EXEC ENTERLST
+5705   PARAM1$="D:PLANETY.LST":PARAM1=HUN:EXEC ENTERLST
 5706   RESTORE 28900:READ PLCNT
 5710   DIM PLANETS(PLCNT,%3)
 5800   READ OBJCNT:FOR I=%1 TO OBJCNT:OBJ(I)=I:NEXT I
@@ -657,7 +659,7 @@ body {
 10005   I=USR($0664):I=USR(CMCPROC,$C2,$AF,$70):MIS=%0
 10010   EXEC INITGAME:EXEC STARSCREEN
 10100   REPEAT 
-10120     PARAM1=%0:PARAM1$="Wybierz czynno^&#xe01b;&#xe01f;.":EXEC CHAT
+10120     PARAM1=%0:PARAM1$="Wybierz czynno^&#xe01b;&#xe01f;.":? :EXEC CHAT
 10130     ? :? "&#x3e;&#xe0cb;urs/&#xe0c3;zekaj/&#xe0d2;aport";
 10140     CURPL=%0
 10150     FOR I=%1 TO PLCNT
@@ -676,14 +678,16 @@ body {
 10250         ? I;"-";TXT$(I+I-%1,I+I);" ";
 10260       NEXT I
 10270       EXEC SNDQ:REPEAT :KEY$=INKEY$:UNTIL KEY$&#x3e;"0" AND KEY$&#x3c;=STR$(LEN(TXT$) DIV %2) AND LEN(KEY$)
-10280       V=VAL(KEY$):X=DEC(TXT$(V+V-%1,V+V-%1))-9:Y=VAL(TXT$(V+V,V+V))
+10280       V=VAL(KEY$):TXT$=TXT$(V+V-%1,V+V):X=DEC(TXT$(%1,%1))-9:Y=VAL(TXT$(%2,%2))
+10282       PARAM1$="Astrokompas skalibrowany. Nukleonika pe&#xe01b;&#xe01d;na moc.":PARAM1=12:EXEC CHAT:PAUSE FIF
+10283       PARAM1$="Ruszamy do sektora gwiezdnego ":? :EXEC CHAT:? TXT$;".";
 10285       EXEC SNDGSTART
 10290       PARAM1=SQR((X-GWX)^%2+(Y-GWY)^%2):EXEC STIMEON:GWX=X:GWY=Y:EXEC STARSPRITES
 10295       EXEC SNDGEND
 10300       KEY$="":ENDIF 
 10310     IF KEY$="C" OR KEY$="c"
 10320       PARAM1=%0:PARAM1$="Utrzymuje gwiazdolot na orbicie przez miesi&#xe07b;c."
-10330       ? "&#xe09c;";:EXEC CHAT
+10330       EXEC CHAT
 10340       PARAM1=%1:EXEC STIMEON:PAUSE FIF:? :KEY$=""
 10350     ENDIF 
 10400     IF KEY$="R" OR KEY$="r"
@@ -716,11 +720,13 @@ body {
 12100 ENDPROC 
 12200 ------------------------------
 12210 PROC ENTERLST
+12211   IF PARAM1&#x3e;%0 THEN X=DPEEK($90)+99:Y=DPEEK(560)-%1:FOR PTR=X TO Y:POKE PTR,%0:NEXT PTR
 12212   II=USR(CMCPROC,%0,%0,$40)
-12215   EXEC OFFPMG:GRAPHICS %0:EXEC OFFPMG:POSITION %2,5:? "ENTER """;PARAM1$;""""
+12215   EXEC OFFPMG:GRAPHICS %0:DPOKE 709,%0:POKE 712,10:EXEC OFFPMG:POSITION %2,5:? "ENTER """;PARAM1$;""""
+12216   IF PARAM1&#x3e;%0 THEN DPOKE DL+4,DPEEK($90):DPOKE 560,DL:DPOKE 711,$60:DPOKE 709,$0A08
 12220   POSITION %2,10:? "POKE842,12:CONT"
 12225   POSITION %2,%0:POKE 842,13:STOP 
-12228   II=USR(CMCPROC,PARAM1,%0,%0)
+12228   IF PARAM1&#x3e;=%0 THEN II=USR(CMCPROC,PARAM1,%0,%0)
 12230 ENDPROC 
 12250 ------------------------------
 12255 PROC SKAFIKO
@@ -761,13 +767,13 @@ body {
 21100 IF T&#x26;%1 AND PEEK(PMPL+7)=4
 21103   OK=%1
 21105   IF FRS
-21110     H=RAND(HUM)+%1:PARAM1=-H:PARAM1$="Aaaa! Ruchome piaski!":EXEC CHAT
+21110     H=RAND(HUM)+%1:PARAM1=-H:PARAM1$="Aaaa! Ruchome piaski!":? :EXEC CHAT
 21115     PTR=OBJ(H):PARAM1=%2:EXEC DEALDAM
 21120     ID=H:? :EXEC STATE
 21125   ELSE 
 21130     PARAM1=5:EXEC ISPRESENT:IF RESULT
-21135       PARAM1$="Uwaga na ruchome piaski! Przeprowadz&#xe005; was.":EXEC CHAT
-21140     ELSE :PARAM1=-100:PARAM1$="Ruchome piaski. Musimy nadlo&#xe01b;&#xe01c;y&#xe01b;&#xe01f; drogi.":EXEC CHAT
+21135       PARAM1$="Uwaga na ruchome piaski! Przeprowadz&#xe005; was.":? :EXEC CHAT
+21140     ELSE :PARAM1=-100:PARAM1$="Ruchome piaski. Musimy nadlo&#xe01b;&#xe01c;y&#xe01b;&#xe01f; drogi.":? :EXEC CHAT
 21142       PARAM1=RAND(%2)+%1:EXEC TIMEON
 21145     ENDIF 
 21147   ENDIF 
@@ -777,7 +783,7 @@ body {
 21160 IF T&#x26;%2 AND (PEEK(PMPL+6)=%2 OR PEEK(PMPL+6)=%3)
 21162   OK=%1
 21165   PARAM1=5:EXEC ISPRESENT:IF RESULT
-21170     PARAM1$="Uda&#xe01b;&#xe01d;o mi sie znale&#xe01b;&#xe01e;&#xe01b;&#xe01f; troch&#xe005; jadalnych ro^lin (5).":EXEC CHAT:ZASEKS=ZASEKS+5
+21170     PARAM1$="Uda&#xe01b;&#xe01d;o mi sie znale&#xe01b;&#xe01e;&#xe01b;&#xe01f; troch&#xe005; jadalnych ro^lin (5).":? :EXEC CHAT:ZASEKS=ZASEKS+5
 21175   ENDIF 
 21177 ENDIF 
 21180 RETURN 
@@ -793,9 +799,9 @@ body {
 21240 IF T&#x26;32 AND ZASEKS
 21242   OK=%1
 21245   PARAM1=10:EXEC ISPRESENT:IF RESULT
-21250     PARAM1$="Piiip. Trzeba zabezpieczy&#xe01b;&#xe01f; prowiant przy wej^ciu do wody.":EXEC CHAT
+21250     PARAM1$="Piiip. Trzeba zabezpieczy&#xe01b;&#xe01f; prowiant przy wej^ciu do wody.":? :EXEC CHAT
 21255   ELSE 
-21260     PARAM1=-100:ZASEKS=ZASEKS DIV %2+%1:PARAM1$="Prowiant nam zam&#xe01b;&#xe07f;k&#xe01b;&#xe01d;. Zosta&#xe01b;&#xe01d;o ":EXEC CHAT
+21260     PARAM1=-100:ZASEKS=ZASEKS DIV %2+%1:PARAM1$="Prowiant nam zam&#xe01b;&#xe07f;k&#xe01b;&#xe01d;. Zosta&#xe01b;&#xe01d;o ":? :EXEC CHAT
 21265     ? ZASEKS;".";
 21270   ENDIF 
 21272 ENDIF 
@@ -803,9 +809,9 @@ body {
 21288 ------------------------------
 21290 IF T&#x26;64 AND ROB
 21292   OK=%1
-21295   ID=RAND(ROB)+%1+HUM:PARAM1=-ID:PARAM1$="Zzzzzz!":EXEC CHAT:PAUSE FIF
+21295   ID=RAND(ROB)+%1+HUM:PARAM1=-ID:PARAM1$="Zzzzzz!":? :EXEC CHAT:PAUSE FIF
 21300   PTR=OBJ(ID):POKE PTR+%2,%1
-21305   PARAM1=HUN:PARAM1$="Niedobrze, chyba dosta&#xe01b;&#xe01d; zwarcia":EXEC CHAT
+21305   PARAM1=HUN:PARAM1$="Niedobrze, chyba dosta&#xe01b;&#xe01d; zwarcia":? :EXEC CHAT
 21310 ENDIF 
 21315 RETURN 
 21328 ------------------------------
@@ -818,22 +824,22 @@ body {
 21355     NEXT I
 21357     IF M=OBJCNT THEN RETURN 
 21360     ID=RAND(OBJCNT-M)+%1+M:PTR=OBJ(I):TYPE=PEEK(PTR):POKE PTR+%1,%0:POKE PTR+%2,%0
-21365     PARAM1$="Gdzie jest ":PARAM1=TYPE:EXEC GETNAME:PARAM1$(LEN(PARAM1$)+%1)=RESULT$:EXEC CHAT:? "?!";
-21370     PARAM1=12:PARAM1$="Musimy w tych warunkach dok&#xe01b;&#xe01d;adnie pilnowa&#xe01b;&#xe01f; sprz&#xe005;t.":EXEC CHAT
+21365     PARAM1$="Gdzie jest ":PARAM1=TYPE:EXEC GETNAME:PARAM1$(LEN(PARAM1$)+%1)=RESULT$:? :EXEC CHAT:? "?!";
+21370     PARAM1=12:PARAM1$="Musimy w tych warunkach dok&#xe01b;&#xe01d;adnie pilnowa&#xe01b;&#xe01f; sprz&#xe005;t.":? :EXEC CHAT
 21375   ELSE 
-21380     PARAM1$="Trudny teren, pilnujmy sprz&#xe005;t.":EXEC CHAT
+21380     PARAM1$="Trudny teren, pilnujmy sprz&#xe005;t.":? :EXEC CHAT
 21385   ENDIF 
 21390 ENDIF 
 21396 RETURN 
 21438 ------------------------------
 21440 IF PEEK(PMPL+6)=5 AND ROB
 21442   OK=%1
-21445   R=RAND(ROB)+%1+HUM:PARAM1=-R:PARAM1$="Dzzzz, adzzz...":EXEC CHAT:PAUSE FIF
+21445   R=RAND(ROB)+%1+HUM:PARAM1=-R:PARAM1$="Dzzzz, adzzz...":? :EXEC CHAT:PAUSE FIF
 21450   PARAM1=4:EXEC ISPRESENT
 21460   IF RESULT
-21465     PARAM1$="Kwas w powietrzu uszkodzi&#xe01b;&#xe01d; robota. Potrzebuj&#xe005; godzin&#xe005;.":EXEC CHAT:PARAM1=%1:EXEC TIMEON
+21465     PARAM1$="Kwas w powietrzu uszkodzi&#xe01b;&#xe01d; robota. Potrzebuj&#xe005; godzin&#xe005;.":? :EXEC CHAT:PARAM1=%1:EXEC TIMEON
 21470   ELSE 
-21475     PARAM1=HUN:PARAM1$="Zepsu&#xe01b;&#xe01d; si&#xe005;. To chyba atmosfera":EXEC CHAT:PAUSE FIF
+21475     PARAM1=HUN:PARAM1$="Zepsu&#xe01b;&#xe01d; si&#xe005;. To chyba atmosfera":? :EXEC CHAT:PAUSE FIF
 21480     PTR=OBJ(R):POKE PTR+%2,%1:ID=R:EXEC STATE:EXEC BUILDOBJ
 21485   ENDIF 
 21490 ENDIF 
@@ -841,14 +847,14 @@ body {
 21510 ------------------------------
 21515 IF PEEK(PMPL+5)&#x3e;%2 AND T&#x26;4
 21520   OK=%1
-21525   H=RAND(HUM)+%1:PARAM1=-H:PARAM1$="Aaaa! Spaaadaaam!":EXEC CHAT
+21525   H=RAND(HUM)+%1:PARAM1=-H:PARAM1$="Aaaa! Spaaadaaam!":? :EXEC CHAT
 21530   IF FRS
 21535     PTR=OBJ(H):PARAM1=4:EXEC DEALDAM
 21540     ID=H:EXEC STATE:PARAM1=%3:EXEC TIMEON
 21545   ELSE 
 21550     PARAM1=8:EXEC ISPRESENT
 21555     IF RESULT
-21560       PARAM1$="Mam ci&#xe005;. Lepiej uwa&#xe01b;&#xe01c;aj.":EXEC CHAT
+21560       PARAM1$="Mam ci&#xe005;. Lepiej uwa&#xe01b;&#xe01c;aj.":? :EXEC CHAT
 21565     ELSE 
 21570       PTR=OBJ(H):ID=%2:EXEC DEALDAM
 21575       PARAM1=H:EXEC STATE
@@ -859,16 +865,16 @@ body {
 21600 ------------------------------
 21605 IF PEEK(PMPL+5)=%1 OR (PEEK(PMPL+5)=%2 AND PEEK(PMPL+8))
 21607   OK=%1
-21610   H=RAND(HUM)+%1:PARAM1=-H:PARAM1$="Odrzuci&#xe01b;&#xe01d;o mnie z powierzchni! &#xe00c;apcie mnie!!":EXEC CHAT:PAUSE FIF:? 
+21610   H=RAND(HUM)+%1:PARAM1=-H:PARAM1$="Odrzuci&#xe01b;&#xe01d;o mnie z powierzchni! &#xe00c;apcie mnie!!":? :EXEC CHAT:PAUSE FIF
 21615   IF FRS
 21620     PTR=OBJ(H):POKE PTR+%2,%0
 21625     PARAM1=12:PARAM1$="Odlecia&#xe01b;&#xe01d; z powierzchni. Stracili^my go.":EXEC CHAT
 21630     ID=H:EXEC STATE:POKE PTR+%1,%0:EXEC BUILDOBJ
 21640   ELSE 
 21645     IF ROB
-21650       R=RAND(ROB)+HUM+%1:PARAM1=-R:PARAM1$="Dobra, sprowadzam ci&#xe005; na ziemi&#xe005;":EXEC CHAT
+21650       R=RAND(ROB)+HUM+%1:PARAM1=-R:PARAM1$="Dobra, sprowadzam ci&#xe005; na ziemi&#xe005;":? :EXEC CHAT
 21655     ELSE 
-21660       PARAM1=-H:PARAM1$="Lec&#xe005; na powierzchnie. Uwaaagaa!!!":EXEC CHAT
+21660       PARAM1=-H:PARAM1$="Lec&#xe005; na powierzchnie. Uwaaagaa!!!":? :EXEC CHAT
 21665       PTR=OBJ(H):PARAM1=%2:EXEC DEALDAM
 21670       ID=H:EXEC STATE:EXEC BUILDOBJ
 21675     ENDIF 
@@ -880,14 +886,19 @@ body {
 21717   OK=%1
 21720   PARAM1=9:EXEC ISPRESENT:R=RESULT
 21725   IF FRS OR NOT R
-21730     H=RAND(HUM)+%1:PARAM1=-H:PARAM1$="P&#xe005;ka l&#xe01b;&#xe07f;d!!":EXEC CHAT:PAUSE FIF:? 
-21735     PARAM1=12:PARAM1$="&#xe01a;yjesz?":EXEC CHAT:PAUSE FIF:PTR=OBJ(H)
+21730     H=RAND(HUM)+%1:PARAM1=-H:PARAM1$="P&#xe005;ka l&#xe01b;&#xe07f;d!!":? :EXEC CHAT:PAUSE FIF
+21735     PARAM1=12:PARAM1$="&#xe01a;yjesz?":? :EXEC CHAT:PAUSE FIF:PTR=OBJ(H)
 21740     IF T&#x26;4:PARAM1=%3:EXEC DEALDAM:PARAM1=%3:EXEC TIMEON
 21745     ELSE :PARAM1=%1:EXEC DEALDAM:ENDIF 
 21750   ELSE 
-21755     PARAM1=R:IF RAND(%2):PARAM1$="Uwaga na cienki l&#xe01b;&#xe07f;d. Ale mo&#xe01b;&#xe01c;emy i^&#xe01b;&#xe01f; dalej.":EXEC CHAT
-21760     ELSE :PARAM1$="Cienki l&#xe01b;&#xe07f;d, musimy zwolni&#xe01b;&#xe01f;.":EXEC CHAT:PARAM1=%1:EXEC TIMEON:ENDIF 
+21755     PARAM1=R:IF RAND(%2):PARAM1$="Uwaga na cienki l&#xe01b;&#xe07f;d. Ale mo&#xe01b;&#xe01c;emy i^&#xe01b;&#xe01f; dalej.":? :EXEC CHAT
+21760     ELSE :PARAM1$="Cienki l&#xe01b;&#xe07f;d, musimy zwolni&#xe01b;&#xe01f;.":? :EXEC CHAT:PARAM1=%1:EXEC TIMEON:ENDIF 
 21765   ENDIF 
 21770 ENDIF 
 21775 RETURN 
+29000 PROC STARSCREEN:ENDPROC 
+29001 PROC STARTIME:ENDPROC 
+29002 PROC STARSPRITES:ENDPROC 
+29003 PROC STIMEON:ENDPROC 
+29004 PROC STREP:ENDPROC 
 </html>
