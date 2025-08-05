@@ -12,18 +12,35 @@ body {
 </style></head>
 5 GRAPHICS 7+16:PMBASE=PEEK(106)-8:PM256=PMBASE*256:POKE 106,PMBASE-16:PMPOCHW=PM256+160
 8 DL=PM256+283:FOR I=%0 TO 103:POKE $0600+I,PEEK(DPEEK(560)+I):NEXT I:DPOKE $0600+102,DL
-100 DIM PARAM1$(80),TXT$(20),KEY$(%1):GRAPHICS %0:DPOKE 709,$0A:POKE 712,$0A:MOVE $0600,DL,104
-102 PARAM1$="&#xe00c;aduj&#xe005; czcionki terminala.":EXEC LOGUJ
+100 DIM PARAM1$(100),TXT$(20),KEY$(%1):GRAPHICS %0:DPOKE 709,$0A:POKE 712,$0A:MOVE $0600,DL,104
+101 PARAM1$="Inicjalizuj&#xe005; terminal koordynatora.":EXEC LOGUJ:PAUSE 50
+102 PARAM1$="Czcionki terminala.":EXEC LOGUJ
 105 OPEN #1,4,%0,"D:ODKR.FNT":BGET #1,PM256+1024,1024:CLOSE #1:POKE 756,PMBASE+4
-112 PARAM1$="&#xe00c;aduj&#xe005; elementy audio.":EXEC LOGUJ:BLOAD "D:ODKRTEST.CMC"
-120 PARAM1$="&#xe00c;aduj&#xe005; procedury audio.":EXEC LOGUJ:BLOAD "D:ODKRTEST.REP":CMCPROC=$0658
+112 PARAM1$="Elementy audiofoniczne.":EXEC LOGUJ:BLOAD "D:ODKRTEST.CMC"
+120 PARAM1$="Procedury audiofoniczne.":EXEC LOGUJ:BLOAD "D:ODKRTEST.REP":CMCPROC=$0658
 150 FOR PTR=PM256+416 TO PM256+463:POKE PTR,128:NEXT PTR
-220 PARAM1$="&#xe00c;aduj&#xe005; parametry sprz&#xe005;tu.":EXEC LOGUJ
+220 PARAM1$="Parametry inwentaryzacyjne.":EXEC LOGUJ
 225 OPEN #1,4,%0,"D:CONST.OBJ":BGET #1,PMPOCHW,123:CLOSE #1
-226 PARAM1$="&#xe00c;aduj&#xe005; procedury maszynowe.":EXEC LOGUJ:BLOAD "D:MACH.OBJ"
+226 PARAM1$="Procedury maszynowe.":EXEC LOGUJ:BLOAD "D:MACH.OBJ"
 250 DATA 170,170,170,170,0,0,0,0,170,170,170,170,0,0,0,0,170,170,170,170
 260 PTR=PM256+696
 270 FOR I=%1 TO 20:READ J:POKE PTR,J:PTR=PTR+%1:NEXT I
+280 PARAM1$="Wyci&#xe07b;g z przepis&#xe01b;&#xe07f;w bezpiecze&#xe00d;stwa misji kosmicznych o charakterze naukowo-ratunkowym."
+281 EXEC LOGUJ:PAUSE 50:? 
+290 PARAM1$="1. Nad bezpiecze&#xe00d;stwem i powodzeniem misji czuwa Koordynator Misji.":EXEC PRINTSLOW:PAUSE 50:? 
+300 PARAM1$="2. Bezpiecze&#xe00d;stwo cz&#xe01b;&#xe01d;onk&#xe01b;&#xe07f;w za&#xe01b;&#xe01d;ogi i sprz&#xe005;tu pozostaje zawsze priorytetem.":EXEC PRINTSLOW
+310 PAUSE 50:? :PARAM1$="3. Koordynator osobi^cie nigdy nie bierze udzia&#xe01b;&#xe01d;u w ekspedycji, pozostaj&#xe07b;c"
+311 EXEC PRINTSLOW
+312 PARAM1$=" ca&#xe01b;&#xe01d;y czas w gwiazdolocie.":EXEC PRINTSLOW:PAUSE 50:? 
+320 PARAM1$="4. Po wyl&#xe07b;dowaniu na eksplorowanym obiekcie obowi&#xe07b;zkowe jest zbadanie obszaru l&#xe07b;dowania."
+322 EXEC PRINTSLOW:PAUSE 50:? 
+330 PARAM1$="5. W ka&#xe01b;&#xe01c;dej ekspedycji musi znajdowa&#xe01b;&#xe01f; si&#xe005; przynajmniej jeden cz&#xe01b;&#xe01d;owiek.":EXEC PRINTSLOW:PAUSE 50
+340 ? :PARAM1$="6. Kontakt radiowy pomi&#xe005;dzy cz&#xe01b;&#xe01d;onkami ekspedycji a gwiazdolotem musi by&#xe01b;&#xe01f;":EXEC PRINTSLOW
+342 PARAM1$=" przez ca&#xe01b;&#xe01d;y czas utrzymywany, a wszystkie rozmowy zapisane w radiogramie.":EXEC PRINTSLOW
+343 PAUSE 50:? 
+350 PARAM1$="7. Po powrocie na macierzysty kosmodrom dokonywana jest ocena misji.":EXEC PRINTSLOW:PAUSE 50:? 
+352 PARAM1$="8. Na ocen&#xe005; wp&#xe01b;&#xe01d;ywaj&#xe07b; rezultaty poszczeg&#xe01b;&#xe07f;lnych ekspedycji, op&#xe01b;&#xe07f;&#xe01b;&#xe01e;nienia w locie w przestrzeni "
+354 EXEC PRINTSLOW:PARAM1$="kosmicznej oraz stan ludzi, automat&#xe01b;&#xe07f;w i pozosta&#xe01b;&#xe01d;ego sprz&#xe005;tu.":EXEC PRINTSLOW
 1300 PARAM1$="&#xe00c;aduj&#xe005; program g&#xe01b;&#xe01d;&#xe01b;&#xe07f;wny.":EXEC LOGUJ:POKE 82,%2:RUN "D:ODKR":END 
 1330 ------------------------------
 1331 PROC PRINTSLOW
