@@ -10,109 +10,48 @@ body {
   white-space: pre-wrap;
 }
 </style></head>
-30000 ------------------------------
-30001 PROC DRAWMAP
-30010   RESTORE 30080
-30012   FOR I=4 TO 15:POSITION 4,I:READ PARAM1$:? #6;PARAM1$:NEXT I
-30080   DATA &#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe086;&#xe087;&#xe060;&#xe060;&#xe060;&#xe013;&#xe086;&#xe087;&#xe013;&#xe013;&#xe013;
-30081   DATA &#xe086;&#xe087;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe060;&#xe060;&#xe060;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;
-30082   DATA &#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe086;&#xe087;&#xe013;&#xe013;&#xe019;&#xe060;&#xe060;&#xe013;&#xe013;&#xe013;&#xe013;&#xe086;&#xe087;
-30083   DATA &#xe013;&#xe013;&#xe086;&#xe087;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe060;&#xe060;&#xe060;&#xe013;&#xe013;&#xe086;&#xe087;&#xe013;&#xe013;
-30084   DATA &#xe013;&#xe013;&#xe013;&#xe013;&#xe087;&#xe013;&#xe013;&#xe013;&#xe013;&#xe060;&#xe060;&#xe017;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;
-30085   DATA &#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe060;&#xe060;&#xe060;&#xe008;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;
-30086   DATA &#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe086;&#xe087;&#xe013;&#xe060;&#xe060;&#xe060;&#xe060;&#xe060;&#xe001;&#xe086;&#xe087;&#xe013;
-30087   DATA &#xe013;&#xe086;&#xe087;&#xe013;&#xe013;&#xe086;&#xe013;&#xe013;&#xe013;&#xe060;&#xe060;&#xe060;&#xe060;&#xe060;&#xe060;&#xe013;&#xe013;&#xe013;
-30088   DATA &#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe016;&#xe060;&#xe060;&#xe060;&#xe060;&#xe060;&#xe013;&#xe086;&#xe087;
-30089   DATA &#xe060;&#xe008;&#xe060;&#xe060;&#xe060;&#xe00b;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe00a;&#xe060;&#xe060;&#xe060;&#xe086;&#xe013;&#xe013;
-30090   DATA &#xe060;&#xe060;&#xe060;&#xe060;&#xe060;&#xe060;&#xe013;&#xe086;&#xe087;&#xe086;&#xe087;&#xe013;&#xe060;&#xe060;&#xe060;&#xe013;&#xe013;&#xe013;
-30091   DATA &#xe060;&#xe060;&#xe060;&#xe060;&#xe060;&#xe002;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe013;&#xe016;&#xe060;&#xe060;&#xe013;&#xe013;&#xe013;
-30100 ENDPROC 
-30110 ------------------------------
-30111 PROC INITPLANET
-30112   DATA 35,37,33,0,6,3,5,2,1,4
-30113   DATA 4,10,16,17,19,20,23
-30114   DATA 10,16,23
-30115   DATA 1,161,6,241,24,244
-30119   RESTORE 30112:PTR=PMPL:FOR I=%1 TO 10:READ J:POKE PTR,J:PTR=PTR+%1:NEXT I
-30120   FOR I=%1 TO 24:DPOKE PTR,4:PTR=PTR+%2:NEXT I
-30121   PTR=PMPL+8:FOR I=%1 TO 6:READ J:POKE PTR+J+J,%1:NEXT I
-30122   RESTORE 30114:POKE 182,RAND(%3):READ I:POKE PMPL+9+I+I,128
-30125   RESTORE 30115:POKE 182,RAND(%3)*%2:READ I:PTR=PMPL+8+I+I:POKE PTR,12:POKE PTR+%1,64:READ I:PL(4)=I
-30130   PROMX=%1+RAND(%2):PROMY=4:EKSX=PROMX:EKSY=PROMY
-30140   PL(%1)=%0:PL(%2)=%0:PL(%3)=%0:PLPKT=%0
-30200 ENDPROC 
-30330 ------------------------------
-30340 PROC PLTIMEON
-30350 ENDPROC 
-30400 ------------------------------
-30410 PROC PLANETDESC
-30420   PARAM1$="""S.O.S.! Tu komputer pok&#xe01b;&#xe01d;adowy statku Nokturn-8.":EXEC PRINTSLOW
-30425   PARAM1$=" Statek rozbi&#xe01b;&#xe01d; si&#xe005;. Astronauta &#xe01b;&#xe01c;yje, ale musi mie&#xe01b;&#xe01f; dostarczony prowiant i ":EXEC PRINTSLOW
-30430   PARAM1$="zosta&#xe01b;&#xe01f; przetransportowany w klatce-E na statek ratunkowy.":EXEC PRINTSLOW
-30435   ? :PARAM1$="Statek znajduje si&#xe005; w dolinie w pozycj&#x3c;...&#x3e;.""":EXEC PRINTSLOW
-30440   ? :? 
-30460 ENDPROC 
-30500 ------------------------------
-30510 PROC PLNAME
-30520   RESULT$="FRAKTALUS"
-30530 ENDPROC 
-30540 ------------------------------
-30545 PROC FIRSTIMP
-30550   IF PL(%1):PARAM1=%3:PARAM1$="Dobrze, &#xe01b;&#xe01c;e uda&#xe01b;&#xe01d;o mi si&#xe005; wyl&#xe07b;dowa&#xe01b;&#xe01f; blisko doliny.":EXEC CHAT
-30555     PL(%1)=%0:ENDIF 
-30575 ENDPROC 
-30600 ------------------------------
-30605 PROC PLEVENT
-30610   M=PARAM1
-30615   IF M&#x26;128 AND (BAD OR M&#x26;%1) AND NOT PL(%1)
-30617     IF NOT PL(%3):PL(%3)=%1:PLPKT=PLPKT+%1:ENDIF 
-30620     PARAM1=HUN:PARAM1$="Jest astronauta.":EXEC CHAT:PAUSE FIF
-30625     PARAM1=21:EXEC ISPRESENT:? 
-30630     IF RESULT AND ZASEKS&#x3e;%1
-30635       PARAM1=HUN:PARAM1$="Trzeba go zaopatrzy&#xe01b;&#xe01f; i umie^ci&#xe01b;&#xe01f; w klatce-E.":EXEC CHAT
-30640       PAUSE FIF:PARAM1$="Ruszamy.":EXEC CHAT
-30645       FOR I=%1 TO OBJCNT:IF NOT PL(%1) AND PEEK(OBJ(I))=21 THEN PL(%1)=OBJ(I)
-30650       NEXT I
-30655       ZASEKS=ZASEKS-%2
-30660     ELSE 
-30665       PARAM1=HUN:PARAM1$="&#xe01a;eby go przenie^&#xe01b;&#xe01f; musimy mie&#xe01b;&#xe01f; 2 jednostki zasob&#xe01b;&#xe07f;w i klatk&#xe005;-E.":EXEC CHAT
-30670     ENDIF 
-30680     IF NOT PL(%2)
-30685       PARAM1=HUN:PARAM1$="Wygl&#xe07b;da na to, &#xe01b;&#xe01c;e statek zosta&#xe01b;&#xe01d; zestrzelony":? :EXEC CHAT:PL(%2)=%1:PAUSE FIF
-30690       PARAM1=%1:EXEC ISPRESENT:R=RESULT:PARAM1=7:EXEC ISPRESENT:RESULT=RESULT*7
-30695       PARAM1=R!RESULT:PARAM1$="Sprwdzi&#xe01b;&#xe01d;em w komputerze. Zosta&#xe01b;&#xe01d; zestrzelony z wie&#xe01b;&#xe01c;yczki w sektorze "
-30700       ? :EXEC CHAT:? HEX$(PL(4));".";:PAUSE FIF
-30705       PARAM1$="Warto by&#xe01b;&#xe01d;oby si&#xe005; przedosta&#xe01b;&#xe01f; tam i j&#xe07b; zniszczy&#xe01b;&#xe01f;.":? :EXEC CHAT:PLPKT=PLPKT+%2:PL(%2)=%1
-30710     ENDIF 
-30720   ENDIF 
-30730   IF M&#x26;64 AND PL(%2) AND (BAD OR M&#x26;%1)
-30735     PARAM1=HUN:PARAM1$="Dobra, jest. Dobrze ukryto wie&#xe01b;&#xe01c;yczk&#xe005;.":EXEC CHAT:PAUSE FIF
-30740     PARAM1$="&#xe01a;eby j&#xe07b; zniszcZy&#xe01b;&#xe01f;, potrzebujemy ponad 15 si&#xe01b;&#xe01d;y ognia.":? :EXEC CHAT
-30745     W=%0:FOR ID=%1 TO OBJCNT:EXEC GETWALKA:W=W+RESULT:NEXT ID
-30747     PARAM1=HUN
-30750     IF W&#x3e;15
-30755       PARAM1$="Dobra, uda&#xe01b;&#xe01d;o si&#xe005;! Mo&#xe01b;&#xe01c;emy wraca&#xe01b;&#xe01f; na prom.":? :EXEC CHAT
-30760       PLPKT=PLPKT+%3:PL(%2)=%0
-30770     ELSE 
-30775       PARAM1$="Nie uda&#xe01b;&#xe01d;o sie. Mamy za ma&#xe01b;&#xe01d;&#xe07b; si&#xe01b;&#xe01d;&#xe005; ognia.":? :EXEC CHAT
-30780     ENDIF 
-30790   ENDIF 
-30800   RESULT=%1
-31015 ENDPROC 
-31100 ------------------------------
-31110 PROC LASTIMP
-31115   PARAM1=12:V=%0:IF PL(%1):PTR=PL(%1):IF (PEEK(PTR+%1)=%2 OR PEEK(PTR++%1)=%3) AND PEEK(PTR+%2)=%2
-31120       PARAM1$="Gratuluj&#xe005; wszystkim udanej misji ratunkowej. Dobra robota.":PLPKT=PLPKT+4:V=%1:ENDIF :ENDIF 
-31125   IF NOT V:PARAM1$="Szkoda, &#xe01b;&#xe01c;e nie uda&#xe01b;&#xe01d;o si&#xe005; ocali&#xe01b;&#xe01f; rozbitka."
-31130   ENDIF 
-31135   ? :EXEC CHAT:PAUSE FIF+FIF
-31150 ENDPROC 
-31210 ------------------------------
-31211 PROC BEFORELAND
-31220   PARAM1=%3:EXEC ISPRESENT:IF RESULT
-31225     PROMY=%1:IF RAND(%2):PROMX=%3:ELSE :PROMX=5:ENDIF 
-31230     PL(%1)=%1
-31240   ENDIF 
-31250   EKSX=PROMX:EKSY=PROMY
-31300 ENDPROC 
+5 GRAPHICS 7+16:PMBASE=PEEK(106)-8:PM256=PMBASE*256:POKE 106,PMBASE-16:PMPOCHW=PM256+160:CMCPROC=$0658
+8 DL=PM256+283:FOR I=%0 TO 103:POKE $0600+I,PEEK(DPEEK(560)+I):NEXT I:DPOKE $0600+102,DL
+100 DIM PARAM1$(100),TXT$(20),KEY$(%1):GRAPHICS %0:DPOKE 709,$0A:POKE 712,$0A:MOVE $0600,DL,104
+101 PARAM1$="Inicjalizuj&#xe005; terminal koordynatora.":EXEC LOGUJ:PAUSE 50
+102 PARAM1$="Czcionki terminala.":EXEC LOGUJ
+105 OPEN #1,4,%0,"D:ODKR.FNT":BGET #1,PM256+1024,1024:CLOSE #1:POKE 756,PMBASE+4
+112 PARAM1$="Elementy audiofoniczne.":EXEC LOGUJ:BLOAD "D:INTRO.CMC"
+120 PARAM1$="Procedury audiofoniczne.":EXEC LOGUJ:BLOAD "D:ODKRTEST.REP":CMCPROC=$0658
+150 FOR PTR=PM256+416 TO PM256+463:POKE PTR,128:NEXT PTR
+220 PARAM1$="Parametry inwentaryzacyjne.":EXEC LOGUJ
+225 OPEN #1,4,%0,"D:CONST.OBJ":BGET #1,PMPOCHW,123:CLOSE #1
+226 PARAM1$="Procedury maszynowe.":EXEC LOGUJ:BLOAD "D:MACH.OBJ"
+250 DATA 170,170,170,170,0,0,0,0,170,170,170,170,0,0,0,0,170,170,170,170
+260 PTR=PM256+696
+270 FOR I=%1 TO 20:READ J:POKE PTR,J:PTR=PTR+%1:NEXT I
+275 I=USR($0664):I=USR(CMCPROC,$C2,$AF,$70):I=USR(CMCPROC,%0,%0,%0)
+280 PARAM1$="Wyci&#xe07b;g z przepis&#xe01b;&#xe07f;w bezpiecze&#xe00d;stwa misji kosmicznych o charakterze naukowo-ratunkowym."
+281 EXEC LOGUJ:PAUSE 50:? 
+290 PARAM1$="1. Nad bezpiecze&#xe00d;stwem i powodzeniem misji czuwa Koordynator Misji.":EXEC PRINTSLOW:PAUSE 50:? 
+300 PARAM1$="2. Bezpiecze&#xe00d;stwo cz&#xe01b;&#xe01d;onk&#xe01b;&#xe07f;w za&#xe01b;&#xe01d;ogi i sprz&#xe005;tu pozostaje zawsze priorytetem.":EXEC PRINTSLOW
+310 PAUSE 50:? :PARAM1$="3. Koordynator osobi^cie nigdy nie bierze udzia&#xe01b;&#xe01d;u w ekspedycji, pozostaj&#xe07b;c"
+311 EXEC PRINTSLOW
+312 PARAM1$=" ca&#xe01b;&#xe01d;y czas w gwiazdolocie.":EXEC PRINTSLOW:PAUSE 50:? 
+320 PARAM1$="4. Po wyl&#xe07b;dowaniu na eksplorowanym obiekcie obowi&#xe07b;zkowe jest zbadanie obszaru l&#xe07b;dowania."
+322 EXEC PRINTSLOW:PAUSE 50:? 
+330 PARAM1$="5. W ka&#xe01b;&#xe01c;dej ekspedycji musi znajdowa&#xe01b;&#xe01f; si&#xe005; przynajmniej jeden cz&#xe01b;&#xe01d;owiek.":EXEC PRINTSLOW:PAUSE 50
+340 ? :PARAM1$="6. Kontakt radiowy pomi&#xe005;dzy cz&#xe01b;&#xe01d;onkami ekspedycji a gwiazdolotem musi by&#xe01b;&#xe01f;":EXEC PRINTSLOW
+342 PARAM1$=" przez ca&#xe01b;&#xe01d;y czas utrzymywany, a wszystkie rozmowy zapisane w radiogramie.":EXEC PRINTSLOW
+343 PAUSE 50:? 
+350 PARAM1$="7. Po powrocie na macierzysty kosmodrom dokonywana jest ocena misji.":EXEC PRINTSLOW:PAUSE 50:? 
+352 PARAM1$="8. Na ocen&#xe005; wp&#xe01b;&#xe01d;ywaj&#xe07b; rezultaty poszczeg&#xe01b;&#xe07f;lnych ekspedycji, op&#xe01b;&#xe07f;&#xe01b;&#xe01e;nienia w locie w przestrzeni "
+354 EXEC PRINTSLOW:PARAM1$="kosmicznej oraz stan ludzi, automat&#xe01b;&#xe07f;w i pozosta&#xe01b;&#xe01d;ego sprz&#xe005;tu.":EXEC PRINTSLOW
+1290 PARAM1$="Czy za&#xe01b;&#xe01d;adowa&#xe01b;&#xe01f; biblioteki muzyczne na podr&#xe01b;&#xe07f;&#xe01b;&#xe01c;? [T/N]":EXEC LOGUJ
+1292 REPEAT :PARAM1$=INKEY$:I=UINSTR("TN",PARAM1$):UNTIL LEN(PARAM1$) AND I
+1294 IF PARAM1$="T" OR PARAM1$="t":PARAM1$="D:ODKR.CMC":ELSE :PARAM1$="D:CISZA.CMC":ENDIF 
+1296 I=USR(CMCPROC,$40,%0,%0):PAUSE 10:BLOAD PARAM1$
+1300 PARAM1$="&#xe00c;aduj&#xe005; program g&#xe01b;&#xe01d;&#xe01b;&#xe07f;wny.":EXEC LOGUJ:POKE 82,%2:RUN "D:ODKR":END 
+1330 ------------------------------
+1331 PROC PRINTSLOW
+1332   FOR I=%1 TO LEN(PARAM1$):? PARAM1$(I,I);:PAUSE %2:NEXT I:ENDPROC 
+1340 ------------------------------
+1350 PROC LOGUJ
+1360   POKE 82,%0:? :POKE 82,7:? TIME$;" ";:EXEC PRINTSLOW
+1370 ENDPROC 
 </html>
