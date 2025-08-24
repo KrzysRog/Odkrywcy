@@ -10,7 +10,7 @@ body {
   white-space: pre-wrap;
 }
 </style></head>
-5 GRAPHICS 7+16:PMBASE=PEEK(106)-8:PM256=PMBASE*256:POKE 106,PMBASE-16:PMPOCHW=PM256+160:CMCPROC=$0658
+5 GRAPHICS 7+16:PMBASE=PEEK(106)-8:PM256=PMBASE*256:POKE 106,PMBASE-16:PMPOCHW=PM256+160:CMCPROC=$0658:HLPFLG=1
 8 DL=PM256+283:FOR I=%0 TO 103:POKE $0600+I,PEEK(DPEEK(560)+I):NEXT I:DPOKE $0600+102,DL
 100 DIM PARAM1$(100),TXT$(20),KEY$(%1):GRAPHICS %0:DPOKE 709,$0A:POKE 712,$0A:MOVE $0600,DL,104
 101 PARAM1$="Inicjalizuj&#xe005; terminal koordynatora.":EXEC LOGUJ:PAUSE 50
@@ -26,6 +26,7 @@ body {
 260 PTR=PM256+696
 270 FOR I=%1 TO 20:READ J:POKE PTR,J:PTR=PTR+%1:NEXT I
 275 I=USR($0664):I=USR(CMCPROC,$C2,$AF,$70):I=USR(CMCPROC,%0,%0,%0)
+277 PARAM1$="Naci^nij &#xe0c8;&#xe0c5;&#xe0cc;&#xe0d0;, aby pomin&#xe07b;&#xe01b;&#xe01f; sekcj&#xe005;.":EXEC LOGUJ:HLPFLG=0:POKE 732,0:PAUSE 50
 280 PARAM1$="Wyci&#xe07b;g z przepis&#xe01b;&#xe07f;w bezpiecze&#xe00d;stwa misji kosmicznych o charakterze naukowo-ratunkowym."
 281 EXEC LOGUJ:PAUSE 50:? 
 290 PARAM1$="1. Nad bezpiecze&#xe00d;stwem i powodzeniem misji czuwa Koordynator Misji.":EXEC PRINTSLOW:PAUSE 50:? 
@@ -49,9 +50,13 @@ body {
 1300 PARAM1$="&#xe00c;aduj&#xe005; program g&#xe01b;&#xe01d;&#xe01b;&#xe07f;wny.":EXEC LOGUJ:POKE 82,%2:RUN "D:ODKR":END 
 1330 ------------------------------
 1331 PROC PRINTSLOW
-1332   FOR I=%1 TO LEN(PARAM1$):? PARAM1$(I,I);:PAUSE %2:NEXT I:ENDPROC 
+1332   FOR I=%1 TO LEN(PARAM1$):? PARAM1$(I,I);:PAUSE %2:NEXT I:EXEC HELP:ENDPROC 
 1340 ------------------------------
 1350 PROC LOGUJ
 1360   POKE 82,%0:? :POKE 82,7:? TIME$;" ";:EXEC PRINTSLOW
 1370 ENDPROC 
+1400 ------------------------------
+1405 PROC HELP
+1410   IF PEEK(732) AND NOT HLPFLG:HLPFLG=%1:GOTO 1290:ENDIF 
+1420 ENDPROC 
 </html>
