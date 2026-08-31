@@ -199,7 +199,7 @@ body {
 1985 PROC PRINTPROTCOL
 1990   PTR=OBJ(ID):PARAM1=PEEK(PTR):EXEC GETNAME:? RESULT$;:IF PARAM1&#x3c;8
 2000     DPOKE 85,11+(DPEEK(85)&#x3e;20)*19
-2001     IF PEEK(PMPL+6)=5:? "&#xe010;";:ELSE :? "&#xe01f;";:ENDIF :? "&#xe004; &#xe000; ";PEEK(PTR+%2);"/5";
+2001     IF ATM=5:? "&#xe010;";:ELSE :? "&#xe01f;";:ENDIF :? "&#xe004; &#xe000; ";PEEK(PTR+%2);"/5";
 2005   ELSE 
 2010     DPOKE 85,13+(DPEEK(85)&#x3e;20)*19
 2011     IF PARAM1&#x3c;13 OR PARAM1=17:? "&#xe010;";:ELSE :? "&#xe01f;";:ENDIF 
@@ -329,10 +329,11 @@ body {
 2470   RES=RES DIV R
 2475   FOR I=PMTEREN TO PMTEREN+15 STEP %3
 2480     IF T&#x26;M
-2485       RESULT=RESULT+PEEK(I)
+2485       RESULT=RESULT+PEEK(I)-%3
 2488     ENDIF 
 2490     M=M+M
 2492   NEXT I
+2494   IF RESULT&#x3c;%0 THEN RESULT=%0
 2495   RES=RES+RESULT DIV R
 2500   IF RES&#x3c;=ZASEKS
 2505     PARAM1$="W trakcie postoju za&#xe01b;&#xe01d;oga wykorzysta&#xe01b;&#xe01d;a zasoby. Pozosta&#xe01b;&#xe01d;e jednostki: "
@@ -483,7 +484,7 @@ body {
 3450   DATA Brak,Rozrzedzona,Normalna,Truj&#xe07b;ca,Kwasowa
 3460   DATA Arktyczny,Umiarkowany,Tropikalny,Pustynny,brak
 3470   ? :? "Grawitacja: ";:RESTORE 3440:POKE 182,PEEK(PMPL+5)-%1:READ PARAM1$:EXEC PRINTSLOW
-3480   ? :? "Atmosfera:  ";:RESTORE 3450:POKE 182,PEEK(PMPL+6)-%1:READ PARAM1$:EXEC PRINTSLOW
+3480   ? :? "Atmosfera:  ";:RESTORE 3450:POKE 182,ATM-%1:READ PARAM1$:EXEC PRINTSLOW
 3490   ? :? "Klimat:     ";:RESTORE 3460:POKE 182,PEEK(PMPL+7)-%1:READ PARAM1$:EXEC PRINTSLOW
 3500   ? :? "Geologia:   ";
 3510   IF PEEK(PMPL+8):PARAM1$="":ELSE :PARAM1$="nie":ENDIF 
@@ -773,7 +774,7 @@ body {
 21148 ENDIF 
 21149 RETURN 
 21158 ------------------------------
-21160 IF T&#x26;%2 AND (PEEK(PMPL+6)=%2 OR PEEK(PMPL+6)=%3)
+21160 IF T&#x26;%2 AND (ATM=%2 OR ATM=%3)
 21162   OK=%1
 21165   PARAM1=5:EXEC ISPRESENT:IF RESULT
 21170     PARAM1$="Uda&#xe01b;&#xe01d;o mi sie znale&#xe01b;&#xe01e;&#xe01b;&#xe01f; troch&#xe005; jadalnych ro^lin (5).":? :EXEC CHAT:ZASEKS=ZASEKS+5
@@ -825,7 +826,7 @@ body {
 21390 ENDIF 
 21396 RETURN 
 21438 ------------------------------
-21440 IF PEEK(PMPL+6)=5 AND ROB
+21440 IF ATM=5 AND ROB
 21442   OK=%1
 21445   R=RAND(ROB)+%1+HUM:PARAM1=-R:PARAM1$="Dzzzz, adzzz...":? :EXEC CHAT:PAUSE FIF
 21450   PARAM1=4:EXEC ISPRESENT
