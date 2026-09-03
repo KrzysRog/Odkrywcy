@@ -783,10 +783,12 @@ body {
 21180 RETURN 
 21198 ------------------------------
 21200 W=PEEK(PMPL+9):IF PEEK(PMPL+7)&#x3c;5
-21202   OK=%1
-21205   V=%0:IF RAND(%2) AND W&#x3c;8
-21215   ELSE :IF W&#x3e;%2 THEN PARAM1$="Spodziewana poprawa pogody. Zasoby lokalne: -":V=-1
-21220   ENDIF :IF V THEN POKE PMPL+9,W+V:? PEEK(PMPL+9);
+21202   OK=%1:V=RAND(%3)-%1:PARAM1=%0
+21205   IF V AND W&#x3e;=V
+21215     PARAM1$="Zmiana warunk&#xe01b;&#xe07f;w lokalnych: ":EXEC CHAT:? "-";W;" -&#x3e; -";W-V;
+21217     POKE PMPL+9,W-V
+21218   ELSE :PARAM1$="Warunki lokalne stabilne.":EXEC CHAT
+21220   ENDIF 
 21222 ENDIF 
 21225 RETURN 
 21238 ------------------------------
