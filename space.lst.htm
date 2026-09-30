@@ -67,7 +67,8 @@ body {
 29490         ENDIF 
 29500         PTR=PTR+%3
 29510       NEXT J:ELSE 
-29512       REPEAT :I=RAND(%1):M=%2^I:UNTIL NOT (EVM&#x26;M)
+29511       IF EVM=%3 THEN EVM=%0
+29512       REPEAT :I=RAND(%1):M=%2^I:UNTIL NOT (EVM&#x26;M):EXEC BUILDOBJ:I=%1:GOSUB 30000-I*HUN:RTIME=%0
 29520     ENDIF :WEND 
 29530   IF RES:PARAM1$="Cz&#xe005;^&#xe01b;&#xe01f; za&#xe01b;&#xe01d;ogi/sprz&#xe005;tu nie jest w pe&#xe01b;&#xe01d;ni sprawna."
 29540   ELSE 
@@ -110,4 +111,12 @@ body {
 29855 PARAM1$="Stan sprz&#xe005;tu:":EXEC PRINTSLOW:? 
 29860 PARAM1$="&#xe07f;- zniszczony: ":EXEC PRINTSLOW:? PL(%3):PARAM1$="&#xe07f;- uszkodzony: ":EXEC PRINTSLOW:? PL(4)
 29865 RETURN 
+29999 ------------------------------
+30000 EVM=EVM+%1:PARAM1=%0:PARAM1$="Zbli&#xe01b;&#xe01c;amy si&#xe005; do roju asteroid. Zalecam zmian&#xe005; i wyd&#xe01b;&#xe01d;u&#xe01b;&#xe01c;enie kursu."
+30010 ? :EXEC CHAT:IF PEEK(PM256+%3)&#x3e;%3:PAUSE FIF:PARAM1=%1:PARAM1$="Znam je. S&#xe07b; drobne. Utrzyma&#xe01b;&#xe01f; kurs."
+30020   ? :EXEC CHAT:PAUSE FIF:ELSE :T=T+%1:ENDIF :RETURN 
+30099 ------------------------------
+30100 EVM=EVM+%2:PARAM1=0:PARAM1$="Awaria nukleoniki.":? :EXEC CHAT:PAUSE FIF
+30110 PARAM1=11:EXEC ISPRESENT:IF RESULT:PARAM1$="Prosta usterka. Ju&#xe01b;&#xe01c; naprawiam.":? :EXEC CHAT
+30120 ELSE :PARAM1=12:PARAM1$="Potrzebujemy zatrzyma&#xe01b;&#xe01f; silniki na jaki^ czas.":EXEC CHAT:T=T+%1:ENDIF :RETURN 
 </html>
