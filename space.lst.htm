@@ -52,35 +52,32 @@ body {
 29350 ------------------------------
 29360 PROC STIMEON
 29370   IF FRAC(PARAM1):PARAM1=TRUNC(PARAM1)+%1:ENDIF 
-29380   T=PARAM1:PARAM1=4:EXEC ISPRESENT:R=RESULT:BAD=%0:RTIME=%0
+29380   T=PARAM1:PARAM1=4:EXEC ISPRESENT:R=RESULT:RTIME=%0
 29390   WHILE T:T=T-%1:RTIME=RTIME+0.2
-29400     PAUSE FIF:STIME=STIME-%1:EXEC STARTIME:PTR=PM256+%1:RES=%0
+29400     PAUSE FIF:STIME=STIME-%1:PTR=PM256+%1
 29405     IF FRS OR RND(%0)&#x3e;RTIME
 29410       FOR J=%1 TO PEEK(PM256)
 29420         IF PEEK(PTR+%1)=%1
 29430           IF PEEK(PTR)&#x3c;8 AND PEEK(PTR+%2)&#x3c;5
-29440             BAD=%1:POKE PTR+%2,PEEK(PTR+%2)+%1:IF PEEK(PTR+%2)&#x3c;5 THEN RES=%1
+29440             POKE PTR+%2,PEEK(PTR+%2)+%1
 29450           ENDIF 
-29460           IF PEEK(PTR)&#x3e;7 AND PEEK(PTR+%2)=%1
-29470             BAD=%1:IF R+RAND(%2):POKE PTR+%2,%2:ELSE :RES=%1:ENDIF 
-29480           ENDIF 
+29460           IF PEEK(PTR)&#x3e;7 AND PEEK(PTR+%2)=%1 AND R+RAND(%2) THEN POKE PTR+%2,%2
 29490         ENDIF 
 29500         PTR=PTR+%3
 29510       NEXT J:ELSE 
-29511       IF EVM=%3 THEN EVM=%0
-29512       REPEAT :I=RAND(%1):M=%2^I:UNTIL NOT (EVM&#x26;M):EXEC BUILDOBJ:I=%1:GOSUB 30000-I*HUN:RTIME=%0
-29520     ENDIF :WEND 
-29530   IF RES:PARAM1$="Cz&#xe005;^&#xe01b;&#xe01f; za&#xe01b;&#xe01d;ogi/sprz&#xe005;tu nie jest w pe&#xe01b;&#xe01d;ni sprawna."
-29540   ELSE 
-29550     PARAM1$="Za&#xe01b;&#xe01d;oga i sprz&#xe005;t w pe&#xe01b;&#xe01d;ni sprawne."
-29560   ENDIF 
-29570   IF BAD:PARAM1=%0:? :EXEC CHAT:ENDIF :PAUSE FIF
+29511       IF EVM=$7F THEN EVM=%0
+29512       REPEAT :C=RAND(7):M=%2^C:UNTIL NOT (EVM&#x26;M):EXEC BUILDOBJ:C=6:GOSUB 30000-C*HUN:RTIME=%0
+29520     ENDIF :EXEC STARTIME:WEND 
+29525   RES=%0:PTR=PM256+%1:FOR I=%1 TO PEEK(PM256):TYPE=PEEK(PTR):V=PEEK(PTR+%2)
+29527     IF V THEN RES=RES OR (TYPE&#x3c;8 AND V&#x3c;5) OR (TYPE&#x3e;7 AND V=%1)
+29528     PTR=PTR+%3:NEXT I
+29530   IF RES THEN PARAM1$="Cz&#xe005;^&#xe01b;&#xe01f; za&#xe01b;&#xe01d;ogi/sprz&#xe005;tu nie jest w pe&#xe01b;&#xe01d;ni sprawna.":PARAM1=%0:? :EXEC CHAT:PAUSE FIF
 29580 ENDPROC 
 29590 ------------------------------
 29600 PROC STREP
 29610   GRAPHICS %0:EXEC OFFPMG:POKE 710,%0:POKE 709,10:SOUND %1,%0,%0,%0:POKE 756,PMBASE+4
 29620   ? TIME$;" ";:PARAM1$="Zbieram status...":EXEC PRINTSLOW:? 
-29625   ? TIME$;" ";:PARAM1$="Pami&#xe005;&#xe01b;&#xe01f;":EXEC PRINTSLOW:PAUSE 20:POKE 85,24:? "stan: ";:TYPE=FRE(%0):? TYPE
+29625   ? TIME$;" ";:PARAM1$="Pami&#xe005;&#xe01b;&#xe01f;":EXEC PRINTSLOW:PAUSE 20:POKE 85,24:? "stan: ";:? FRE(%0)
 29630   PTR=PM256+%1
 29640   FOR J=%1 TO PEEK(PM256)
 29650     W=PEEK(PTR+%2):IF W
@@ -113,11 +110,37 @@ body {
 29860 PARAM1$="&#xe07f;- zniszczony: ":EXEC PRINTSLOW:? PL(%3):PARAM1$="&#xe07f;- uszkodzony: ":EXEC PRINTSLOW:? PL(4)
 29865 RETURN 
 29999 ------------------------------
-30000 EVM=EVM+%1:PARAM1=%0:PARAM1$="Zbli&#xe01b;&#xe01c;amy si&#xe005; do roju asteroid. Zalecam zmian&#xe005; i wyd&#xe01b;&#xe01d;u&#xe01b;&#xe01c;enie kursu."
+30000 EVM=EVM!%1:PARAM1=%0:PARAM1$="Zbli&#xe01b;&#xe01c;amy si&#xe005; do roju asteroid. Zalecam zmian&#xe005; i wyd&#xe01b;&#xe01d;u&#xe01b;&#xe01c;enie kursu."
 30010 ? :EXEC CHAT:IF PEEK(PM256+%3)&#x3e;%3:PAUSE FIF:PARAM1=%1:PARAM1$="Znam je. S&#xe07b; drobne. Utrzyma&#xe01b;&#xe01f; kurs."
 30020   ? :EXEC CHAT:PAUSE FIF:ELSE :T=T+%1:ENDIF :RETURN 
 30099 ------------------------------
-30100 EVM=EVM+%2:PARAM1=0:PARAM1$="Awaria nukleoniki.":? :EXEC CHAT:PAUSE FIF
+30100 EVM=EVM!%2:PARAM1=%0:PARAM1$="Awaria nukleoniki.":? :EXEC CHAT:PAUSE FIF
 30110 PARAM1=11:EXEC ISPRESENT:IF RESULT:PARAM1$="Prosta usterka. Ju&#xe01b;&#xe01c; naprawiam.":? :EXEC CHAT
 30120 ELSE :PARAM1=12:PARAM1$="Potrzebujemy zatrzyma&#xe01b;&#xe01f; silniki na jaki^ czas.":EXEC CHAT:T=T+%1:ENDIF :RETURN 
+30199 ------------------------------
+30200 EVM=EVM!4:PARAM1=%0:PARAM1$="Wykryto b&#xe01b;&#xe01d;&#xe07b;d w wyliczeniach astrokompasu. Potrzebna korekta kursu."
+30205 ? :EXEC CHAT
+30210 IF PEEK(PM256+9)=5:PARAM1=%3:PARAM1$="Zrobi&#xe005; poprawki tak, &#xe01b;&#xe01c;eby nie traci&#xe01b;&#xe01f; kolejnego miesi&#xe07b;ca."
+30220 ELSE :T=T+%1:PARAM1=12:PARAM1$="Powr&#xe01b;&#xe07f;t na kurs zajmie miesi&#xe07b;c.":ENDIF :PAUSE FIF:? :EXEC CHAT:RETURN 
+30299 ------------------------------
+30300 EVM=EVM!8:PARAM1=%0:PARAM1$="Za&#xe01b;&#xe01d;oga zatru&#xe01b;&#xe01d;a si&#xe005; rozszczelnion&#xe07b; parti&#xe07b; jedzenia.":? :EXEC CHAT
+30310 PTR=PM256+%3:FOR I=%1 TO 8:V=PEEK(PTR)-RAND(%2)-%1:IF V&#x3c;%0 THEN V=%0
+30320   POKE PTR,V:PTR=PTR+%3:NEXT I:RETURN 
+30399 ------------------------------
+30400 EVM=EVM!16:PARAM1=%0:PARAM1$="Wykryto silny rozb&#xe01b;&#xe01d;ysk pobliskiej gwiazdy. Uszkodzenie robot&#xe01b;&#xe07f;w."
+30410 ? :EXEC CHAT:PTR=PM256+%1
+30420 FOR I=%1 TO PEEK(PM256):TYPE=PEEK(PTR):IF TYPE&#x3e;7 AND TYPE&#x3c;12 AND PEEK(PTR+%2) THEN POKE PTR+%2,%1
+30430   PTR=PTR+%3:NEXT I:RETURN 
+30499 ------------------------------
+30500 EVM=EVM!$20:PARAM1=%0:PARAM1$="UWAGA! Nieudokumentowany r&#xe01b;&#xe07f;j asteroid! Zapi&#xe07b;&#xe01b;&#xe01f; pasy!":? :EXEC CHAT
+30510 PTR=PM256+%1:FOR TYPE=%1 TO 7:K=PEEK(PTR+%2):IF K:V=RAND(10-PEEK(PMSZYBK+TYPE-%1))
+30520     POKE PTR+%2,(K-V)*(K&#x3e;V):ENDIF :NEXT TYPE:PAUSE FIF
+30530 PARAM1=12:PARAM1$="Za aktualizacj&#xe005; map roj&#xe01b;&#xe07f;w dostajemy bud&#xe01b;&#xe01c;et na miesi&#xe07b;c.":? :EXEC CHAT
+30540 STIME=STIME+%1:RETURN 
+30599 ------------------------------
+30600 EVM=EVM!$40:PARAM1=%0:PARAM1$="Wyciek z reaktora. Wykryto wzrost promieniowania.":? :EXEC CHAT
+30610 V=PEEK(PM256+%1+9+%2):IF V&#x3e;%3:PARAM1=4:PARAM1$="Zajm&#xe005; si&#xe005; tym. Odci&#xe07b;&#xe01b;&#xe01f; maszynowni&#xe005;!":PAUSE FIF:? :EXEC CHAT
+30620   V=(V-%2)*(V&#x3e;%2):POKE PM256+12,V:ELSE :PTR=PM256+%3
+30630   FOR I=%1 TO 7:V=PEEK(PTR):IF V THEN POKE PTR,V-%1:PTR=PTR+%3
+30640   NEXT I:ENDIF :RETURN 
 </html>
